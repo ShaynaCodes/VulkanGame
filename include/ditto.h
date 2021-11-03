@@ -3,11 +3,12 @@
 
 #include "entity.h"
 
-//Entity* ditto_spawn(vector3D position);
-
-
-
-
+/**
+ * @brief Create a new agumon entity
+ * @param position where to spawn the aguman at
+ * @return NULL on error, or an agumon entity pointer on success
+ */
+Entity *ditto_new(Vector3D position);
 
 
 #endif

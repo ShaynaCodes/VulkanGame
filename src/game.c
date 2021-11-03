@@ -24,7 +24,16 @@ int main(int argc, char* argv[])
     int a;
     Uint8 validate = 0;
     const Uint8* keys;
-    Entity* pickup;
+    Entity* fly;
+    Entity* speed;
+    Entity* legend;
+    Entity* heal;
+    Entity* radius;
+    Entity* trainer1;
+    Entity* trainer2;
+    Entity* trainer3;
+    Entity* trainer4;
+    Entity* trainer5;
     World* w;
 
     for (a = 1; a < argc; a++)
@@ -49,17 +58,30 @@ int main(int argc, char* argv[])
 
     entity_system_init(1024);
 
-    w = world_load("config/world.json");
+  //  w = world_load("config/world.json");
 
     for (a = 0; a < 10; a++)
     {
-       // pickup_spawn(vector3d(a * 0, 0, 0));
-        trainer2_spawn(vector3d(a * 0, 0, 0));
+     //   trainer2_spawn(vector3d(a * 0, 0, 0));
+      
     }
+    //trainer spawn
+    trainer1= trainer2_spawn(0, 0, 0);
+    trainer2 = trainer1_spawn(0, 0, 0);
+    trainer3 = trainer1_spawn(0, 0, 0);
+    trainer4 = trainer2_spawn(0, 0, 0);
+    trainer5 = trainer2_spawn(0, 0, 0);
+    //pickup spawn
+    speed = speed_spawn(vector3d(0, 0, 0));
+    legend = legendary_spawn(vector3d(0, 0, 0));
+    heal = heal_spawn(vector3d(0, 0, 0));
+    radius = radius_spawn(vector3d(0, 0, 0));
+    //fly 
+
 
     // main game loop
     slog_sync();
-    gf3d_camera_set_scale(vector3d(1, 1, 1));
+    gf3d_camera_set_scale(vector3d(10, 10, 10));
 
     slog("gf3d main loop begin");
     player_new(vector3d(0, -100, 0));
@@ -76,15 +98,16 @@ int main(int argc, char* argv[])
         // for each mesh, get a command and configure it from the pool
         gf3d_vgraphics_render_start();
 
-        world_draw(w);
+     //   world_draw(w);
         entity_draw_all();
 
         gf3d_vgraphics_render_end();
 
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
+       
     }
 
-   world_delete(w);
+ //  world_delete(w);
 
     vkDeviceWaitIdle(gf3d_vgraphics_get_default_logical_device());
     //cleanup
