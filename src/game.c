@@ -36,6 +36,7 @@ int main(int argc, char* argv[])
     Entity* trainer5;
     World* w;
 
+
     for (a = 1; a < argc; a++)
     {
         if (strcmp(argv[a], "-disable_validate") == 0)
@@ -58,27 +59,20 @@ int main(int argc, char* argv[])
 
     entity_system_init(1024);
 
-  //  w = world_load("config/world.json");
+    w = world_load("config/world.json");
 
-    for (a = 0; a < 10; a++)
-    {
-     //   trainer2_spawn(vector3d(a * 0, 0, 0));
-      
-    }
-    //trainer spawn
-    trainer1= trainer2_spawn(0, 0, 0);
-    trainer2 = trainer1_spawn(0, 0, 0);
-    trainer3 = trainer1_spawn(0, 0, 0);
-    trainer4 = trainer2_spawn(0, 0, 0);
-    trainer5 = trainer2_spawn(0, 0, 0);
+    //for (a = 0; a < 1; a++) {trainer1_spawn(vector3d( 10 - 50, 0, 0));}   //trainer 1 spawn
+ //   for (a = 0; a < 2; a++) {trainer2_spawn(vector3d( 10 - 50, -100, 0));}   //trainer 2 spawn
+   
+    for (a = 0; a < 1; a++){speed_spawn(vector3d(10 - 50, 0, 0));}  //speed pick up BLUE
+    for (a = 0; a < 1; a++) { legendary_spawn(vector3d(10 - 50, 100, 0));} //legendary pick up YELLOW
+    for (a = 0; a < 1; a++) { heal_spawn(vector3d(10 - 50, -150, 0)); } // heal pick up HEAL
+    for (a = 0; a < 1; a++) { radius_spawn(vector3d(10 - 50, -100, 0)); } // radius pick up RED
     //pickup spawn
-    speed = speed_spawn(vector3d(0, 0, 0));
-    legend = legendary_spawn(vector3d(0, 0, 0));
-    heal = heal_spawn(vector3d(0, 0, 0));
-    radius = radius_spawn(vector3d(0, 0, 0));
-    //fly 
-
-
+   // speed = speed_spawn(0, 0, 0);
+    //legend = legendary_spawn(vector3d(0, 0, 0));
+    //heal = heal_spawn(vector3d(0, 0, 0));
+    //radius = radius_spawn(vector3d(0, 0, 0));
     // main game loop
     slog_sync();
     gf3d_camera_set_scale(vector3d(10, 10, 10));
@@ -98,16 +92,16 @@ int main(int argc, char* argv[])
         // for each mesh, get a command and configure it from the pool
         gf3d_vgraphics_render_start();
 
-     //   world_draw(w);
+           world_draw(w);
         entity_draw_all();
 
         gf3d_vgraphics_render_end();
 
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
-       
+
     }
 
- //  world_delete(w);
+      world_delete(w);
 
     vkDeviceWaitIdle(gf3d_vgraphics_get_default_logical_device());
     //cleanup

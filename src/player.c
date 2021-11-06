@@ -98,6 +98,13 @@ void player_think(Entity* self)
                         self->complete = 1;
                         self->target->turn = 1;
                         self->target->complete = 0;
+                        
+                        if (self->health <= 0)
+                        {
+                            slog("you lost");
+
+                            self->dead = 1;
+                        }
                     }
                     if (self->lengendary >= 1) //lengendary attack if you have a lengendary pickup
                     {
@@ -109,6 +116,12 @@ void player_think(Entity* self)
                             self->complete = 1;
                             self->target->turn = 1;
                             self->target->complete = 0;
+                        }
+                        if (self->health <= 0)
+                        {
+                            slog("you lost");
+
+                            self->dead = 1;
                         }
                     }
                 }
@@ -138,6 +151,12 @@ void player_think(Entity* self)
                     {
                         slog("You LOST");
                         self->health = 0;
+                        if (self->health <= 0)
+                        {
+                            slog("you lost");
+
+                            self->dead = 1;
+                        }
                     }
 
                 }
@@ -167,6 +186,11 @@ void player_think(Entity* self)
                 self->complete = 0;
                 self->target->turn = 0;
                 self->target->complete = 1;
+            }
+            if (self->dead == 1)
+            {
+               //end game
+                gf3d_entity_free(self);
             }
         }
     }

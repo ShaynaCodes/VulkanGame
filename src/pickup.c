@@ -4,12 +4,13 @@
 #include "gfc_vector.h"
 #include "gfc_matrix.h"
 
+#include "gf3d_camera.h"
 void legendary_think(Entity *self);
-void legendary_update(Entity* self);
-void heal_think(Entity* self);
-void radius_think(Entity* self);
-void fly_think(Entity* self);
-void speed_think(Entity* self);
+void legendary_update(Entity *self);
+void heal_think(Entity *self);
+void radius_think(Entity *self);
+void fly_think(Entity *self);
+void speed_think(Entity *self);
 
 
 //fly_spawn(Vector3D position);
@@ -29,13 +30,14 @@ Entity *legendary_spawn(Vector3D position)
 	ent->think = legendary_think;
 	ent->update = legendary_update;
 	ent->rotation.x = -M_PI;
-	ent->model = gf3d_model_load("dino");
+	ent->model = gf3d_model_load("legendary");
 	ent->name = 4;
+	vector3d_copy(ent->position, position);
 	ent->attack = 0;
 	return ent;
 }
 
-void legendary_think(Entity* self) //collision for pickup items
+void legendary_think(Entity *self) //collision for pickup items
 {
 	if (self->target != NULL)
 	{
@@ -60,9 +62,11 @@ void legendary_think(Entity* self) //collision for pickup items
 		}
 	}
 }
-void legendary_update(Entity* self)
+void legendary_update(Entity *self)
 {
-
+		if (!self)return;
+		gf3d_camera_set_position(self->position);
+		gf3d_camera_set_rotation(self->rotation);
 }
 Entity *heal_spawn(Vector3D position)
 {
@@ -77,12 +81,13 @@ Entity *heal_spawn(Vector3D position)
 	ent->health = 5;
 	ent->think = heal_think;
 	ent->rotation.x = -M_PI;
-	ent->model = gf3d_model_load("dino");
+	ent->model = gf3d_model_load("heal");
 	ent->name = 4;
 	ent->attack = 0;
+	vector3d_copy(ent->position, position);
 	return ent;
 }
-void heal_think(Entity* self) //collision for heal items
+void heal_think(Entity *self) //collision for heal items
 {
 	if (self->target != NULL)
 	{
@@ -107,7 +112,7 @@ void heal_think(Entity* self) //collision for heal items
 		}
 	}
 }
-Entity* radius_spawn(Vector3D position)
+Entity *radius_spawn(Vector3D position)
 {
 	Entity* ent;
 	ent = gf3d_entity_new();
@@ -120,12 +125,13 @@ Entity* radius_spawn(Vector3D position)
 	ent->health = 5;
 	ent->think = radius_think;
 	ent->rotation.x = -M_PI;
-	ent->model = gf3d_model_load("dino");
+	ent->model = gf3d_model_load("radius");
+	vector3d_copy(ent->position, position);
 	ent->name = 4;
 	ent->attack = 0;
 	return ent;
 }
-void radius_think(Entity* self) //collision for heal items
+void radius_think(Entity *self) //collision for heal items
 {
 	if (self->target != NULL)
 	{
@@ -150,7 +156,7 @@ void radius_think(Entity* self) //collision for heal items
 		}
 	}
 }
-Entity* speed_spawn(Vector3D position)
+Entity *speed_spawn(Vector3D position)
 {
 	Entity* ent;
 	ent = gf3d_entity_new();
@@ -163,12 +169,13 @@ Entity* speed_spawn(Vector3D position)
 	ent->health = 5;
 	ent->think = speed_think;
 	ent->rotation.x = -M_PI;
-	ent->model = gf3d_model_load("dino");
+	ent->model = gf3d_model_load("speed");
+	vector3d_copy(ent->position, position);
 	ent->name = 4;
 	ent->attack = 0;
 	return ent;
 }
-void speed_think(Entity* self) //collision for speed items
+void speed_think(Entity *self) //collision for speed items
 {
 	if (self->target != NULL)
 	{
