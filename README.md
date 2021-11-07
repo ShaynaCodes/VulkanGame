@@ -1,3 +1,9 @@
+# DITTO MAZE Midterm Game
+ 
+How to play:
+ 
+Move with the keys WASD you move your ditto. With the keys UP,DOWN,LEFT,RIGHT, you change the direction of where you're looking at. Move the player towards the trainers(AGUMON) on the map and press the UP key, this will start the battle. TRAINER 1(PINK) = turn based mini game, TRAINER 2(BLUE) = quiz mini game. Once the trainer loses, it disapears. There are 4 pick ups on the map, Green box = health, player gains health. Red box = bigger radius, smaller radius so the trainer cant see you. Blue pick up= speed boast. Yellow pickup = Legendary move, stronger move against trainers(use the RIGHT key).
+
 # gf3d
 a collection of utlitity functions designed to facilitate creating 3D games with ~~OpenGL~~ Vulkan and SDL2
 This project is specifically intended to function as an educational tool for my students taking 3D Game Programming.
