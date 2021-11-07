@@ -115,7 +115,7 @@ void entity_think_all()
                 entity_manager.entity_list[j].target = &entity_manager.entity_list[i];
 
             }
-            
+
         }
     }
 }
@@ -144,7 +144,7 @@ void entity_update(Entity* self)
 void entity_update_all()
 {
     int i;
-    
+
     for (i = 0; i < entity_manager.entity_count; i++)
     {
         if (!entity_manager.entity_list[i]._inuse)// not used yet

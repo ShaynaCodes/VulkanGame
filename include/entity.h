@@ -48,6 +48,8 @@ void entity_draw_all();
 void entity_think(Entity *self);
 void entity_think_all();
 void entity_update_all();
+void entity_manager_free();
+
 //Entity *gf3d_entity_new();
 int collision(Entity* self, Entity* ent);
 

@@ -23,7 +23,7 @@ Entity *trainer1_spawn(Vector3D position)
 		slog("failed to create entity for trainer1");
 		return NULL;
 	}
-	ent->radius = 50;
+	ent->radius = 10;
 	ent->health = 100;
 	ent->think = trainer1_think;
 	ent->update = trainer1_update;
@@ -44,7 +44,7 @@ void trainer1_think(Entity *self) //collision for trainer battle
 		{
 			self->turn = 0;
 			self->complete = 1;
-
+			slog("Trainer hit ditto");
 			self->target->turn = 1;
 			self->target->complete = 0;
 			if (self->health <= 0)
@@ -77,7 +77,7 @@ Entity *trainer2_spawn(Vector3D position)
 		slog("failed to create entity for trainer2");
 		return NULL;
 	}
-	ent->radius = 50;
+	ent->radius =10;
 	ent->health = 100;
 	ent->think = trainer2_think;
 	ent->update = trainer2_update;

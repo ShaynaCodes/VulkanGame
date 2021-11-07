@@ -28,9 +28,9 @@ Entity* player_new(Vector3D position)
     ent->name = 1;
     ent->pickup = 0;
     ent->health = 100;
-    ent->attack = 20;
+    ent->attack = 10;
     ent->attack2 = 100;
-    ent->mspeed = 1;
+    ent->mspeed = 0;
     ent->lengendary = 0;
     vector3d_copy(ent->position, position);
     ent->rotation.x = -M_PI;
@@ -47,38 +47,38 @@ void player_think(Entity* self)
     keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
 
     vector3d_angle_vectors(self->rotation, &forward, &right, &up);
-    vector3d_set_magnitude(&forward, 0.1 * self->mspeed);
-    vector3d_set_magnitude(&right, 0.1 * self->mspeed);
-    vector3d_set_magnitude(&up, 0.1 * self->mspeed);
+    vector3d_set_magnitude(&forward, 0.1 + self->mspeed);
+    vector3d_set_magnitude(&right, 0.1 + self->mspeed);
+    vector3d_set_magnitude(&up, 0.1 + self->mspeed);
 
-    if (keys[SDL_SCANCODE_W])
+    if (keys[SDL_SCANCODE_D])
     {
         vector3d_add(self->position, self->position, -right); //up
 
         //slog("moved up");
     }
-    if (keys[SDL_SCANCODE_S])
+    if (keys[SDL_SCANCODE_A])
     {
         vector3d_add(self->position, self->position, right); //down
        // slog("moved down");
     }
-    if (keys[SDL_SCANCODE_D])
+    if (keys[SDL_SCANCODE_W])
     {
         vector3d_add(self->position, self->position, forward); //right
        // slog("moved right");
     }
-    if (keys[SDL_SCANCODE_A])
+    if (keys[SDL_SCANCODE_S])
     {
-        vector3d_add(self->position, self->position, -forward); //left
+        vector3d_add(self->position, self->position, -forward ); //left
         //slog("moved left");
     }
-    if (keys[SDL_SCANCODE_SPACE])self->position.z += 0.10 * self->mspeed;
-    if (keys[SDL_SCANCODE_Z])self->position.z -= 0.10 * self->mspeed;
+    if (keys[SDL_SCANCODE_SPACE])self->position.z += 0.10 + self->mspeed;
+    if (keys[SDL_SCANCODE_Z])self->position.z -= 0.10 + self->mspeed;
 
-    if (keys[SDL_SCANCODE_UP])self->rotation.x -= 0.0010 * self->mspeed;
-    if (keys[SDL_SCANCODE_DOWN])self->rotation.x += 0.0010 * self->mspeed;
-    if (keys[SDL_SCANCODE_RIGHT])self->rotation.z -= 0.0010 * self->mspeed;
-    if (keys[SDL_SCANCODE_LEFT])self->rotation.z += 0.0010 * self->mspeed;
+    if (keys[SDL_SCANCODE_UP])self->rotation.x -= 0.0010;
+    if (keys[SDL_SCANCODE_DOWN])self->rotation.x += 0.0010;
+    if (keys[SDL_SCANCODE_RIGHT])self->rotation.z -= 0.0010 ;
+    if (keys[SDL_SCANCODE_LEFT])self->rotation.z += 0.0010 ;
 
     if (self->start == 1)
     {
@@ -94,10 +94,11 @@ void player_think(Entity* self)
                     {
                         p_health = self->health;
                         self->target->health -= self->attack;
+                        slog("You hit trainer");
                         self->turn = 0;
-                        self->complete = 1;
+                       // self->complete = 1;
                         self->target->turn = 1;
-                        self->target->complete = 0;
+                      //  self->target->complete = 0;
                         
                         if (self->health <= 0)
                         {
@@ -113,9 +114,9 @@ void player_think(Entity* self)
                             p_health = self->health;
                             self->target->health -= self->attack2;
                             self->turn = 0;
-                            self->complete = 1;
+                          //  self->complete = 1;
                             self->target->turn = 1;
-                            self->target->complete = 0;
+                        //    self->target->complete = 0;
                         }
                         if (self->health <= 0)
                         {
@@ -133,9 +134,9 @@ void player_think(Entity* self)
                     if (keys[SDL_SCANCODE_UP])
                     {
                         self->turn = 0;
-                        self->complete = 1;
+                      //  self->complete = 1;
                         self->target->turn = 1;
-                        self->target->complete = 0;
+                     //   self->target->complete = 0;
                     }
                     if (keys[SDL_SCANCODE_LEFT])
                     {
@@ -143,9 +144,9 @@ void player_think(Entity* self)
                         self->target->health -= self->attack2;
                         slog("correct");
                         self->turn = 0;
-                        self->complete = 1;
+                      //  self->complete = 1;
                         self->target->turn = 1;
-                        self->target->complete = 0;
+                       // self->target->complete = 0;
                     }
                     if (keys[SDL_SCANCODE_DOWN])
                     {
@@ -190,7 +191,7 @@ void player_think(Entity* self)
             if (self->dead == 1)
             {
                //end game
-                gf3d_entity_free(self);
+              //  gf3d_entity_free(self);
             }
         }
     }

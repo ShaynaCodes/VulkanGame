@@ -189,7 +189,7 @@ void speed_think(Entity *self) //collision for speed items
 			{
 				slog("gain speed up");
 				self->dead = 1;
-				self->target->mspeed + 1;
+				self->target->mspeed + 10;
 			}
 
 		}

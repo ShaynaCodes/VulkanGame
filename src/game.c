@@ -34,6 +34,7 @@ int main(int argc, char* argv[])
     Entity* trainer3;
     Entity* trainer4;
     Entity* trainer5;
+    Entity* player;
     World* w;
 
 
@@ -61,24 +62,35 @@ int main(int argc, char* argv[])
 
     w = world_load("config/world.json");
 
-    //for (a = 0; a < 1; a++) {trainer1_spawn(vector3d( 10 - 50, 0, 0));}   //trainer 1 spawn
- //   for (a = 0; a < 2; a++) {trainer2_spawn(vector3d( 10 - 50, -100, 0));}   //trainer 2 spawn
+    for (a = 0; a < 1; a++) {trainer1= trainer1_spawn(vector3d( 19, 0, 10)); trainer2 =trainer1_spawn(vector3d(70, -40, 10)); trainer3=trainer1_spawn(vector3d(-70, 20, 10)); }//trainer 1 spawn
+    for (a = 0; a < 2; a++) {trainer4= trainer2_spawn(vector3d( -60, -70, 10)); trainer5= trainer2_spawn(vector3d(70, -70, 10));}//trainer 2 spawn
    
-    for (a = 0; a < 1; a++){speed_spawn(vector3d(10 - 50, 0, 0));}  //speed pick up BLUE
-    for (a = 0; a < 1; a++) { legendary_spawn(vector3d(10 - 50, 100, 0));} //legendary pick up YELLOW
-    for (a = 0; a < 1; a++) { heal_spawn(vector3d(10 - 50, -150, 0)); } // heal pick up HEAL
-    for (a = 0; a < 1; a++) { radius_spawn(vector3d(10 - 50, -100, 0)); } // radius pick up RED
-    //pickup spawn
-   // speed = speed_spawn(0, 0, 0);
-    //legend = legendary_spawn(vector3d(0, 0, 0));
-    //heal = heal_spawn(vector3d(0, 0, 0));
-    //radius = radius_spawn(vector3d(0, 0, 0));
+    for (a = 0; a < 1; a++) {speed =speed_spawn(vector3d(0, -50, 10));}  //speed pick up BLUE
+    for (a = 0; a < 1; a++) { legend= legendary_spawn(vector3d(10 - 50, 80, 10));} //legendary pick up YELLOW
+    for (a = 0; a < 1; a++) {heal= heal_spawn(vector3d(80 , 70, 10)); } // heal pick up HEAL
+    for (a = 0; a < 1; a++) { radius=radius_spawn(vector3d(-50, -70, 10)); } // radius pick up RED
+  
     // main game loop
     slog_sync();
     gf3d_camera_set_scale(vector3d(10, 10, 10));
 
     slog("gf3d main loop begin");
-    player_new(vector3d(0, -100, 0));
+   player =player_new(vector3d(0, 100, 10));
+
+   if (player->target == NULL)
+   {
+       player->target = trainer1, trainer2, trainer3, trainer4, trainer5,speed, legend,heal,radius;
+       trainer1->target = player;
+       trainer2->target = player;
+       trainer3->target = player;
+       trainer4->target = player;
+       trainer5->target = player;
+       speed->target = player;
+       legend->target = player;
+       heal->target = player;
+       radius->target = player;
+
+   }
     while (!done)
     {
         SDL_PumpEvents();   // update SDL's internal event structures
