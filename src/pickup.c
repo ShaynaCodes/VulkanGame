@@ -11,9 +11,30 @@ void heal_think(Entity *self);
 void radius_think(Entity *self);
 void fly_think(Entity *self);
 void speed_think(Entity *self);
+void fly_update(Entity* self);
+void key_think(Entity* self);
+void key_update(Entity* self);
 
-
-//fly_spawn(Vector3D position);
+Entity* fly_spawn(Vector3D position)
+{
+	Entity* ent;
+	ent = gf3d_entity_new();
+	if (!ent)
+	{
+		slog("failed to create entity for legendary");
+		return NULL;
+	}
+	ent->radius = 10;
+	ent->health = 5;
+	ent->think = legendary_think;
+	ent->update = legendary_update;
+	ent->rotation.x = -M_PI;
+	ent->model = gf3d_model_load("legendary");
+	ent->name = 11;
+	vector3d_copy(ent->position, position);
+	ent->attack = 0;
+	return ent;
+}
 
 
 Entity *legendary_spawn(Vector3D position)
@@ -82,7 +103,7 @@ Entity *heal_spawn(Vector3D position)
 	ent->think = heal_think;
 	ent->rotation.x = -M_PI;
 	ent->model = gf3d_model_load("heal");
-	ent->name = 4;
+	ent->name = 5;
 	ent->attack = 0;
 	vector3d_copy(ent->position, position);
 	return ent;
@@ -101,7 +122,7 @@ void heal_think(Entity *self) //collision for heal items
 			{
 				slog("gain heal");
 				self->dead = 1;
-				self->target->health+ 50;
+				self->target->health = self->target->maxhealth;
 			}
 
 		}
@@ -171,7 +192,7 @@ Entity *speed_spawn(Vector3D position)
 	ent->rotation.x = -M_PI;
 	ent->model = gf3d_model_load("speed");
 	vector3d_copy(ent->position, position);
-	ent->name = 4;
+	ent->name = 6;
 	ent->attack = 0;
 	return ent;
 }
@@ -199,4 +220,55 @@ void speed_think(Entity *self) //collision for speed items
 			gf3d_entity_free(self);
 		}
 	}
+}
+Entity* key_spawn(Vector3D position)
+{
+	Entity* ent;
+	ent = gf3d_entity_new();
+	if (!ent)
+	{
+		slog("failed to create entity for legendary");
+		return NULL;
+	}
+	ent->radius = 10;
+	ent->health = 1;
+	ent->think = key_think;
+	ent->update = key_update;
+	ent->rotation.x = -M_PI;
+	ent->model = gf3d_model_load("legendary");
+	ent->name = 9;
+	vector3d_copy(ent->position, position);
+	return ent;
+}
+
+void key_think(Entity* self) //collision for pickup items
+{
+	if (self->target != NULL)
+	{
+		if (self->turn == 1)
+		{
+			self->turn = 0;
+			self->complete = 1;
+
+			self->target->turn = 1;
+			if (self->health <= 0)
+			{
+				slog("gained key");
+				self->dead = 1;
+				//self->target->keys++;
+			}
+
+		}
+		if (self->dead == 1)
+		{
+			//pickup disapears
+			gf3d_entity_free(self);
+		}
+	}
+}
+void key_update(Entity* self)
+{
+	if (!self)return;
+	gf3d_camera_set_position(self->position);
+	gf3d_camera_set_rotation(self->rotation);
 }

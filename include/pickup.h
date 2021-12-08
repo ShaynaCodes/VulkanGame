@@ -10,8 +10,7 @@ Entity* heal_spawn(Vector3D position);//healing for ditto
 Entity* radius_spawn(Vector3D position);//farther radius for spotting
 Entity* fly_spawn(Vector3D position);//gain abilitity to fly
 Entity* speed_spawn(Vector3D position);//movement speed
-
-
+Entity* key_spawn(Vector3D position);//keys
 
 
 

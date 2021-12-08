@@ -14,7 +14,7 @@
  * @param width the desired width of the swap chain buffers
  * @param height the desired height of the swap chain buffers
  */
-void gf3d_swapchain_init(VkPhysicalDevice device,VkDevice logicalDevice, VkSurfaceKHR surface,Uint32 width,Uint32 height);
+void gf3d_swapchain_init(VkPhysicalDevice device, VkDevice logicalDevice, VkSurfaceKHR surface, Uint32 width, Uint32 height);
 
 /**
  * @brief check if the initialized swap chain is sufficient for rendering
@@ -38,7 +38,7 @@ VkFormat gf3d_swapchain_get_format();
  * @brief create frame buffers
  * @param pipe the pipeline to create the frame buffers for
  */
-void gf3d_swapchain_setup_frame_buffers(Pipeline *pipe);
+void gf3d_swapchain_setup_frame_buffers(Pipeline* pipe);
 
 /**
  * @brief called at exit to clean up the swap chains

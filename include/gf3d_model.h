@@ -38,28 +38,27 @@ typedef struct
 {
     Uint8                       _inuse;
     TextLine                    filename;
-    Mesh                    *   mesh;
-    Texture                 *   texture;
-    VkDescriptorSet         *   descriptorSet;
-    VkBuffer                   *uniformBuffers;
-    VkDeviceMemory             *uniformBuffersMemory;
+    Mesh                        **mesh;
+    Uint32                      frameCount;
+    Texture* texture;
+    VkDescriptorSet* descriptorSet;
+    VkBuffer* uniformBuffers;
+    VkDeviceMemory* uniformBuffersMemory;
     Uint32                      uniformBufferCount;
 }Model;
 
 
-void gf3d_model_manager_init(Uint32 max_models,Uint32 chain_length,VkDevice device);
+void gf3d_model_manager_init(Uint32 max_models, Uint32 chain_length, VkDevice device);
 
-Model * gf3d_model_load(char * filename);
-Model * gf3d_model_new();
+Model* gf3d_model_load(char* filename);
+Model* gf3d_model_new();
 /**
  * @brief queue up a model for rendering
  * @param model the model to render
- * @param bufferFrame the swap chain frame to render for
- * @param commandBuffer the command used to send this render request
  * @param modelMat the model matrix (MVP)
  */
-void gf3d_model_draw(Model *model,Uint32 bufferFrame,VkCommandBuffer commandBuffer,Matrix4 modelMat);
-void gf3d_model_free(Model *model);
+void gf3d_model_draw(Model* model, Matrix4 modelMat);
+void gf3d_model_free(Model* model);
 
 /**
  * @brief update the descriptorSet with the model data needed to submit the draw command for the model provided
@@ -68,7 +67,8 @@ void gf3d_model_free(Model *model);
  * @param chainIndex the swap chain frame to do this for
  * @param modelMat the matrix to transform the model by
  */
-void gf3d_model_update_basic_model_descriptor_set(Model *model,VkDescriptorSet descriptorSet,Uint32 chainIndex,Matrix4 modelMat);
+void gf3d_model_update_basic_model_descriptor_set(Model* model, VkDescriptorSet descriptorSet, Uint32 chainIndex, Matrix4 modelMat);
+Model* gf3d_model_load_animated(char* filename, Uint32 startFrame, Uint32 endFrame);
 
 
 #endif

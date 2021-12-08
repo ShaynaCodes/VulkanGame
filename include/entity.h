@@ -8,6 +8,13 @@
 #include "gfc_vector.h"
 #include "simple_logger.h"
 
+
+typedef enum
+{
+	ES_Idle = 0,
+	ES_Dying = 1,
+	ES_Dead = 2
+}EntityState;
 typedef struct Entity_S
 {
 	Uint8		_inuse;
@@ -18,7 +25,12 @@ typedef struct Entity_S
 	Vector3D	acceleration;
 	Vector3D	rotation;
 	Vector3D	scale;
-	int dead;
+	EntityState state;
+	int dead; 
+	int objectives; // number of objectives
+	int keys; // number of keys
+	int Tkills; // number of trainer deafeated
+	int Bkills; // number of boss kilss
 	int name;
 	int start;
 	float mspeed;
@@ -32,10 +44,13 @@ typedef struct Entity_S
 	void (*update)(struct Entity_S* self);
 	int attack;
 	int attack2;
+	int attack3;
 	int legendary;
 	float maxhealth;
 	int pickup;
-
+	int lvl;
+	int fly;
+	int xp;
 	float level;
 	void* data;
 }Entity;

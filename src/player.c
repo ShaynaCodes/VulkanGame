@@ -8,7 +8,9 @@
 void player_think(Entity* self);
 void player_update(Entity* self);
 int p_health;
-Entity* player_new(Vector3D position)
+int obj;
+int up;
+Entity* player_new(Vector3D position, int hp, int a1,int a2)
 {
     Entity* ent = NULL;
 
@@ -27,11 +29,17 @@ Entity* player_new(Vector3D position)
     ent->complete = 1;
     ent->name = 1;
     ent->pickup = 0;
-    ent->health = 100;
-    ent->attack = 10;
-    ent->attack2 = 100;
+    ent->health = hp;
+    ent->maxhealth = hp;
+    ent->attack = a1;
+    ent->attack2 = a2;
     ent->mspeed = 0;
     ent->lengendary = 0;
+    ent->keys = 0;
+    ent->Tkills = 0;
+    ent->Bkills = 0;
+    ent->objectives = obj;
+    ent->fly = up;
     vector3d_copy(ent->position, position);
     ent->rotation.x = -M_PI;
     return ent;
@@ -72,14 +80,15 @@ void player_think(Entity* self)
         vector3d_add(self->position, self->position, -forward ); //left
         //slog("moved left");
     }
+    if(self->fly>= 1){
     if (keys[SDL_SCANCODE_SPACE])self->position.z += 0.10 + self->mspeed;
     if (keys[SDL_SCANCODE_Z])self->position.z -= 0.10 + self->mspeed;
-
+}
     if (keys[SDL_SCANCODE_UP])self->rotation.x -= 0.0010;
     if (keys[SDL_SCANCODE_DOWN])self->rotation.x += 0.0010;
     if (keys[SDL_SCANCODE_RIGHT])self->rotation.z -= 0.0010 ;
     if (keys[SDL_SCANCODE_LEFT])self->rotation.z += 0.0010 ;
-
+  //  if (keys[SDL_SCANCODE_O])player_objectives(self);
     if (self->start == 1)
     {
 
@@ -162,6 +171,84 @@ void player_think(Entity* self)
 
                 }
             }
+            if (self->target->name == 6)// interaction with pick ups
+            {
+                if (self->turn == 1)
+                {
+
+                    if (keys[SDL_SCANCODE_UP])//collect
+                    {
+                        p_health = self->health;
+                        self->target->health -= self->attack;
+                        self->turn = 0;
+                        self->complete = 1;
+                        self->target->turn = 1;
+                        self->target->complete = 0;
+                        self->mspeed = .3;
+                        slog("you collected a pickup");
+
+                    }
+                }
+            }
+            if (self->target->name == 7)// interaction with boss
+            {
+                if (self->turn == 1)
+                {
+
+                    if (keys[SDL_SCANCODE_UP])//attack1
+                    {
+                        p_health = self->health;
+                        self->target->health -= self->attack;
+                        slog("You hit boss");
+                        self->turn = 0;
+                        // self->complete = 1;
+                        self->target->turn = 1;
+                        //  self->target->complete = 0;
+                    }
+                    if (keys[SDL_SCANCODE_DOWN])//attack2
+                    {
+                         p_health = self->health;
+                         self->target->health -= self->attack2;
+                         self->turn = 0;
+                            //  self->complete = 1;
+                         self->target->turn = 1;
+                            //    self->target->complete = 0;
+                    }
+                    if (self->health <= 0)
+                    {
+                     
+                        slog("you lost");
+
+                        self->dead = 1;
+                    }
+                    if (self->target->health <= 0)
+                    {
+
+                        slog("you beat the boss");
+                        self->Bkills++;
+                    }
+                    }
+                }
+            if (self->target->name == 11)// interaction with fly
+            {
+                if (self->turn == 1)
+                {
+
+                    if (keys[SDL_SCANCODE_UP])//collect
+                    {
+                        p_health = self->health;
+                        self->target->health -= self->attack;
+                        self->turn = 0;
+                        self->complete = 1;
+                        self->target->turn = 1;
+                        self->target->complete = 0;
+                        self->fly++;
+                        slog("you collected a pickup");
+
+                    }
+                }
+
+            }
             if (self->target->name == 4)// interaction with pick ups
             {
                 if (self->turn == 1)
@@ -180,6 +267,25 @@ void player_think(Entity* self)
                     }
                 }
             }
+            if (self->target->name == 9)// interaction with keys
+            {
+                if (self->turn == 1)
+                {
+
+                    if (keys[SDL_SCANCODE_UP])//collect
+                    {
+                        p_health = self->health;
+                        self->target->health -= self->attack;
+                        self->turn = 0;
+                        self->complete = 1;
+                        self->target->turn = 1;
+                        self->target->complete = 0;
+                        self->keys++;
+                        slog("you collected a key");
+
+                    }
+                }
+            }
             if (self->target->dead == 1)
             {
                 //switch target to another monster
@@ -187,6 +293,42 @@ void player_think(Entity* self)
                 self->complete = 0;
                 self->target->turn = 0;
                 self->target->complete = 1;
+            }
+            if (self->xp >= 50)
+            {
+                self->lvl++;
+                self->attack += 20;
+                self->attack2 += 20;
+                self->maxhealth += 15;
+                slog("you leveled up to level " + self->lvl);
+                self->xp = 0;
+            } 
+            if (self->keys >= 3)
+            {
+                self->objectives++;
+               //  obj =self->objectives ;
+                slog("You have completed an objective: Collected all keys");
+                self->keys = 0;
+            }
+            if (self->Bkills >= 1)
+            {
+                self->objectives++;
+               // obj = self->objectives;
+                //slog("You have completed an objective: Defeated Boss ");
+                self->Bkills = 0;
+            }
+            if (self->Tkills >= 5)
+            {
+                self->objectives++;
+               // obj = self->objectives;
+               // slog("You have completed an objective: Defeated all Trainers");
+                self->Tkills = 0;
+            }
+            if (self->objectives >= 3)
+            {
+                slog("you beat the game by completing all objectives");
+                self->objectives = 0;
+
             }
             if (self->dead == 1)
             {
@@ -204,4 +346,8 @@ void player_update(Entity* self)
     gf3d_camera_set_position(self->position);
     gf3d_camera_set_rotation(self->rotation);
  
+}
+void player_objectives(Entity* self)
+{
+    //slog("Objectives Completed: " + ToString(obj));
 }
