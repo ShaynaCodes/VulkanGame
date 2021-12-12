@@ -1,18 +1,19 @@
 #version 450
-#extension GL_ARB_separate_shader_objects : enable
 
-layout(binding = 1) uniform sampler2D texSampler;
-layout(location = 0) in vec3 fragNormal;
-layout(location = 1) in vec2 fragTexCoord;
+layout (location = 0) in vec3 inNormal;
+layout (location = 1) in vec3 inLight;
+layout (location = 2) in vec3 inColor;
 
 layout(location = 0) out vec4 outColor;
 
+void main() {
+    vec3 cr = inColor; // diffuse reflectance
+    vec3 cl = vec3(0.7); // light intensity
+    vec3 ca = vec3(0.2); // ambient light
 
-void main()
-{
-    vec3 lightVector = vec3(0,0,1);
-    float cosTheta = dot( fragNormal,lightVector );
-    vec4 baseColor = texture(texSampler, fragTexCoord);
-    outColor = baseColor + baseColor * cosTheta;
-    outColor.w = baseColor.w;
+    vec3 N = normalize(inNormal);
+    vec3 L = normalize(inLight);
+    vec3 diffuse = cr * min(ca + cl * max(dot(N, L), 0.0), vec3(1.0));
+
+    outColor = vec4(diffuse, 1.0);
 }

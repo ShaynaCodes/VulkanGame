@@ -7,4 +7,5 @@
 
 Entity* trainer1_spawn(Vector3D position);
 Entity* trainer2_spawn(Vector3D position);
+
 #endif

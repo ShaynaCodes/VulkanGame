@@ -1,5 +1,5 @@
-#ifndef __PICKUP_H__
-#define	__PICKUP_H__
+#ifndef __BOSS_H__
+#define	__BOSS_H__
 
 #include "simple_json.h"
 #include "entity.h"

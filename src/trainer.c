@@ -11,9 +11,6 @@ void trainer1_update(Entity* self);
 void trainer2_update(Entity* self);
 void trainer2_think(Entity *self);
 
-
-
-
 Entity *trainer1_spawn(Vector3D position)
 {
 	Entity* ent = NULL;
@@ -51,6 +48,10 @@ void trainer1_think(Entity *self) //collision for trainer battle
 			{
 				slog("You beat trainer" );
 				self->dead = 1;
+				self->turn = 0;
+				self->complete = 1;
+				self->target->Tkills++;
+				slog("+1 KILL");
 			}
 
 		}
@@ -112,6 +113,10 @@ void trainer2_think(Entity *self) //collision for quiz game
 				slog("Beat Trainer");
 				
 				self->dead = 1;
+				self->turn = 0;
+				self->complete = 1;
+				self->target->Tkills++;
+				slog("+1 KILL");
 			}
 
 		}

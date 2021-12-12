@@ -19,41 +19,44 @@ Entity* boss_spawn(Vector3D position, int hp, int a1, int a2, int a3)
 		return NULL;
 	}
 	ent->radius = 10;
-	ent->health = hp;
+	ent->health = 100;
 	ent->think = boss_think;
 	ent->update = boss_update;
 	ent->rotation.x = -M_PI;
 	vector3d_copy(ent->position, position);
-	ent->model = gf3d_model_load("trainer"); //boss model
-	ent->name = 7;
-	ent->attack = a1;
-	ent->attack2 = a2;
-	ent->attack3 = a3;
+	ent->model = gf3d_model_load("boss"); // pink dino is trainer 1
+	ent->name = 15;
+	ent->attack = 10;
 	return ent;
 }
-void boss_think(Entity* self) 
+void boss_think(Entity* self)
 {
-	int health = self->target->health;
 	if (self->target != NULL)
 	{
-		/*/if (self->turn == 1)
+		if (self->target != NULL)
 		{
-			self->turn = 0;
-			self->complete = 1;
-			self->target->health -= self->attack || self->attack2 ||  self->attack3;
-			slog("Boss hit ditto");
-			self->target->turn = 1;
-			self->target->complete = 0;
-			if (self->health <= 0)
+			if (self->turn == 1)
 			{
-				slog("You beat boss");
-				self->dead = 1;
-			}
+				self->turn = 0;
+				self->complete = 1;
+				slog("Boss hit ditto");
+				self->target->turn = 1;
+				self->target->complete = 0;
+				if (self->health <= 0)
+				{
+					slog("You beat boss");
+					self->dead = 1;
+					self->turn = 0;
+					self->complete = 1;
+				}
 
-		}*/
-		if (self->dead == 1)
-		{
-			gf3d_entity_free(self);
+			}
+			if (self->dead == 1)
+			{
+				//pickup disapears
+				gf3d_entity_free(self);
+				self->dead = 0;
+			}
 		}
 	}
 }

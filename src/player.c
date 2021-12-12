@@ -20,8 +20,6 @@ Entity* player_new(Vector3D position, int hp, int a1,int a2)
         slog("UGH OHHHH, no player for you!");
         return NULL;
     }
-
-   // ent->model = gf3d_model_load("dino");
     ent->think = player_think;
     ent->update = player_update;
     ent->radius = 10;
@@ -33,7 +31,7 @@ Entity* player_new(Vector3D position, int hp, int a1,int a2)
     ent->maxhealth = hp;
     ent->attack = a1;
     ent->attack2 = a2;
-    ent->mspeed = 0;
+    ent->mspeed = .05;
     ent->lengendary = 0;
     ent->keys = 0;
     ent->Tkills = 0;
@@ -55,9 +53,9 @@ void player_think(Entity* self)
     keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
 
     vector3d_angle_vectors(self->rotation, &forward, &right, &up);
-    vector3d_set_magnitude(&forward, 0.1 + self->mspeed);
-    vector3d_set_magnitude(&right, 0.1 + self->mspeed);
-    vector3d_set_magnitude(&up, 0.1 + self->mspeed);
+    vector3d_set_magnitude(&forward, 0.01 + self->mspeed);
+    vector3d_set_magnitude(&right, 0.01 + self->mspeed);
+    vector3d_set_magnitude(&up, 0.01 + self->mspeed);
 
     if (keys[SDL_SCANCODE_D])
     {
@@ -80,10 +78,10 @@ void player_think(Entity* self)
         vector3d_add(self->position, self->position, -forward ); //left
         //slog("moved left");
     }
-    if(self->fly>= 1){
+    //if(self->fly>= 1){
     if (keys[SDL_SCANCODE_SPACE])self->position.z += 0.10 + self->mspeed;
     if (keys[SDL_SCANCODE_Z])self->position.z -= 0.10 + self->mspeed;
-}
+//}
     if (keys[SDL_SCANCODE_UP])self->rotation.x -= 0.0010;
     if (keys[SDL_SCANCODE_DOWN])self->rotation.x += 0.0010;
     if (keys[SDL_SCANCODE_RIGHT])self->rotation.z -= 0.0010 ;
@@ -112,8 +110,14 @@ void player_think(Entity* self)
                         if (self->health <= 0)
                         {
                             slog("you lost");
-
+                          
                             self->dead = 1;
+                        }
+                        if (self->target->health <= 0)
+                        {
+                           
+                            self->Tkills++;
+                            self->xp + 50;
                         }
                     }
                     if (self->lengendary >= 1) //lengendary attack if you have a lengendary pickup
@@ -132,10 +136,18 @@ void player_think(Entity* self)
                             slog("you lost");
 
                             self->dead = 1;
+                           
+                        }
+                        if (self->target->health <= 0)
+                        {
+
+                            self->Tkills++;
+                            self->xp + 50;
                         }
                     }
                 }
             }
+         
             if (self->target->name == 3)// interaction with trainer2
             {
                 if (self->turn == 1)
@@ -156,6 +168,8 @@ void player_think(Entity* self)
                       //  self->complete = 1;
                         self->target->turn = 1;
                        // self->target->complete = 0;
+                        self->xp + 50;
+                        self->Tkills++;
                     }
                     if (keys[SDL_SCANCODE_DOWN])
                     {
@@ -166,6 +180,7 @@ void player_think(Entity* self)
                             slog("you lost");
 
                             self->dead = 1;
+                           
                         }
                     }
 
@@ -190,14 +205,14 @@ void player_think(Entity* self)
                     }
                 }
             }
-            if (self->target->name == 7)// interaction with boss
+            if (self->target->name == 15)// interaction with boss
             {
                 if (self->turn == 1)
                 {
-
                     if (keys[SDL_SCANCODE_UP])//attack1
                     {
                         p_health = self->health;
+                      
                         self->target->health -= self->attack;
                         slog("You hit boss");
                         self->turn = 0;
@@ -207,28 +222,22 @@ void player_think(Entity* self)
                     }
                     if (keys[SDL_SCANCODE_DOWN])//attack2
                     {
-                         p_health = self->health;
-                         self->target->health -= self->attack2;
-                         self->turn = 0;
-                            //  self->complete = 1;
-                         self->target->turn = 1;
-                            //    self->target->complete = 0;
-                    }
-                    if (self->health <= 0)
-                    {
-                     
-                        slog("you lost");
-
-                        self->dead = 1;
+                        p_health = self->health;
+                        self->target->health -= self->attack2;
+                        slog("You hit trainer");
+                        self->turn = 0;
+                        // self->complete = 1;
+                        self->target->turn = 1;
+                        //  self->target->complete = 0;
                     }
                     if (self->target->health <= 0)
                     {
-
                         slog("you beat the boss");
                         self->Bkills++;
                     }
+
                     }
-                }
+            }
             if (self->target->name == 11)// interaction with fly
             {
                 if (self->turn == 1)
@@ -293,6 +302,7 @@ void player_think(Entity* self)
                 self->complete = 0;
                 self->target->turn = 0;
                 self->target->complete = 1;
+                self->Tkills++;
             }
             if (self->xp >= 50)
             {
@@ -300,34 +310,52 @@ void player_think(Entity* self)
                 self->attack += 20;
                 self->attack2 += 20;
                 self->maxhealth += 15;
-                slog("you leveled up to level " + self->lvl);
-                self->xp = 0;
+                slog("leveled up");
+                //self->xp = 0;
             } 
             if (self->keys >= 3)
             {
                 self->objectives++;
                //  obj =self->objectives ;
                 slog("You have completed an objective: Collected all keys");
+                self->lvl++;
+                self->attack += 20;
+                self->attack2 += 20;
+                self->maxhealth += 15;
+                slog("leveled up");
+                self->xp = 0;
                 self->keys = 0;
             }
             if (self->Bkills >= 1)
             {
                 self->objectives++;
                // obj = self->objectives;
-                //slog("You have completed an objective: Defeated Boss ");
+                slog("You have completed an objective: Defeated Boss ");
+                self->lvl++;
+                self->attack += 20;
+                self->attack2 += 20;
+                self->maxhealth += 15;
+                slog("leveled up");
+                self->xp = 0;
                 self->Bkills = 0;
             }
             if (self->Tkills >= 5)
             {
                 self->objectives++;
                // obj = self->objectives;
-               // slog("You have completed an objective: Defeated all Trainers");
+                slog("You have completed an objective: Defeated all Trainers");
+                self->lvl++;
+                self->attack += 20;
+                self->attack2 += 20;
+                self->maxhealth += 15;
+                slog("leveled up");
+                self->xp = 0;
                 self->Tkills = 0;
             }
             if (self->objectives >= 3)
             {
                 slog("you beat the game by completing all objectives");
-                self->objectives = 0;
+               
 
             }
             if (self->dead == 1)
